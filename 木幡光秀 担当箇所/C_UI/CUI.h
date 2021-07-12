@@ -66,5 +66,6 @@ private:
 	int gate_count;    //!通過したゲートの個数
 	int gate_score[3]; //!スコアの配列
 
-
+	const int score_num = 100;
+	const int gate_parametor = 20;
 };

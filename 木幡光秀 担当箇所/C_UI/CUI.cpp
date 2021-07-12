@@ -28,6 +28,7 @@ void CUI::Init()
 	AddFontResourceEx(_T("font/thirteen-pixel-fonts/thirteen_pixel_fonts.ttf"), FR_PRIVATE, nullptr);
 	font      = GraphicsDevice.CreateSpriteFont(_T("Thirteen Pixel Fonts"), 90);
 
+	//!担当箇所
 	//!スコア関係の初期化
 	game_timer = MAX_TIMER;
 	gate_count = FIRST_GATE;
@@ -36,6 +37,28 @@ void CUI::Init()
 
 	IUiParametor::Instance().CreateParametor("ui");
 	_ui_data.reset(new UiData);
+}
+
+void CUI::CollisionTypeGateBreak()
+{
+	//!担当箇所
+	//!ゲートを超えたらスコアを加算する
+	switch (gate_count) {
+	case FIRST_GATE:
+		gate_score[FIRST_GATE] = game_timer * score_num;
+		break;
+	case SECOND_GATE:
+		gate_score[SECOND_GATE] = game_timer * score_num;
+		break;
+	case THIRD_GATE:
+		gate_score[THIRD_GATE] = game_timer * score_num;
+		total = gate_score[FIRST_GATE] + gate_score[SECOND_GATE] + gate_score[THIRD_GATE];
+		clear_flag = true;
+		break;
+	}
+
+	gate_count++;
+	SetGateParameter(gate_parametor);
 }
  
 void CUI::Update()
@@ -98,27 +121,6 @@ void CUI::CollisionTypeGameOver()
 void CUI::CollisionTypeItemBrock()
 {
 	SetGateParameter( 2);
-}
-
-void CUI::CollisionTypeGateBreak()
-{
-	//!ゲートを超えたらスコアを加算する
-	switch (gate_count) {
-	case FIRST_GATE:
-		gate_score[FIRST_GATE] = game_timer * 100;
-		break;
-	case SECOND_GATE:
-		gate_score[SECOND_GATE] = game_timer * 100;
-		break;
-	case THIRD_GATE:
-		gate_score[THIRD_GATE] =  game_timer * 100;
-		total = gate_score[FIRST_GATE] + gate_score[SECOND_GATE] + gate_score[THIRD_GATE];
-		clear_flag = true;
-		break;
-	}
-	
-	gate_count++;
-	SetGateParameter(20);
 }
 
 void CUI::SetGateParameter(int gate_numbers = 1)

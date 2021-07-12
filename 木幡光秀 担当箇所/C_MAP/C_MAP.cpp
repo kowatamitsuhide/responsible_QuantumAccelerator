@@ -24,8 +24,8 @@ void C_MAP:: Update()
 		Vector3 position = *model_position[y].begin();
 		int remove_position = REMOVE_POS;
 
-		//!モデルの座標がプレイヤーの座標より小さい場合削除
-		//!モデルをプッシュバックする
+		//!プレイヤーのZ座標より小さくなった場合、
+		//!配列の一番前の場所を削除し、配列の一番後ろに追加する。
 		if (position.z + remove_position <= player_position.z)
 		{
 			model_position[y].erase(model_position[y].begin());
@@ -40,8 +40,6 @@ void C_MAP::Draw3D()
 {
 	for (int y = 0; y < model_position.size(); ++y) 
 	{
-		//!プレイヤーのZ座標より小さくなった場合、
-		//!配列の一番前の場所を削除し、配列の一番後ろに追加する。
 		for (int x = 0; x < model_position[y].size(); ++x)
 		{
 			model[y]->SetPosition(model_position[y][x]);
