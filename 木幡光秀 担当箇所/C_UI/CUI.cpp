@@ -19,16 +19,15 @@ CUI::~CUI()
 
 void CUI::Init()
 {
-	speed_gage = sprite_mng.CreateSpriteFromFileRect(_T("UI/speedgage/sp.png"),  Vector3(0.0f, 0.0f, 0.0f));
+	speed_gage = sprite_mng.CreateSpriteFromFileRect(_T("UI/speedgage/sp.png"),  Vector3_Zero);
 
 	sprite_mng.CreateSpriteFromFile(_T("SPRITE/aka.png"), Vector3(0.0f, 0.0f, SpriteBatch_BottomMost));
 
-	black_out = sprite_mng.CreateSprite(Vector2(1280.0f, 720.0f), Color(0, 0, 0), Vector3(0.0f,0.0f, SpriteBatch_TopMost));
+	black_out = sprite_mng.CreateSprite(Vector2(1280.0f, 720.0f), Color(Vector3_Zero), Vector3(0.0f,0.0f, SpriteBatch_TopMost));
 
 	AddFontResourceEx(_T("font/thirteen-pixel-fonts/thirteen_pixel_fonts.ttf"), FR_PRIVATE, nullptr);
 	font      = GraphicsDevice.CreateSpriteFont(_T("Thirteen Pixel Fonts"), 90);
 
-	//!’S“–‰ÓŠ
 	//!ƒXƒRƒAŠÖŒW‚Ì‰Šú‰»
 	game_timer = MAX_TIMER;
 	gate_count = FIRST_GATE;
@@ -38,34 +37,12 @@ void CUI::Init()
 	IUiParametor::Instance().CreateParametor("ui");
 	_ui_data.reset(new UiData);
 }
-
-void CUI::CollisionTypeGateBreak()
-{
-	//!’S“–‰ÓŠ
-	//!ƒQ[ƒg‚ð’´‚¦‚½‚çƒXƒRƒA‚ð‰ÁŽZ‚·‚é
-	switch (gate_count) {
-	case FIRST_GATE:
-		gate_score[FIRST_GATE] = game_timer * score_num;
-		break;
-	case SECOND_GATE:
-		gate_score[SECOND_GATE] = game_timer * score_num;
-		break;
-	case THIRD_GATE:
-		gate_score[THIRD_GATE] = game_timer * score_num;
-		total = gate_score[FIRST_GATE] + gate_score[SECOND_GATE] + gate_score[THIRD_GATE];
-		clear_flag = true;
-		break;
-	}
-
-	gate_count++;
-	SetGateParameter(gate_parametor);
-}
  
 void CUI::Update()
 {	
 	if (black_out_flag) { if (sprite_mng.BlackOutTrigger(black_out)) { game_over_flag = true; }; };
 
-	if (this->FrameTimeObsever(60)) {SetGateParameter(-1);};
+	if (this->FrameTimeObsever(FRAME)) {SetGateParameter(COUNT_DOWN);};
 
 	if (game_timer <= 0) { OnCollision("GAMEOVER"); };
 
@@ -105,12 +82,12 @@ void CUI::CollisionTypeDamage()
 {
 	SetGateParameter(-3);
 
-	_ui_data->SetSpeedMeterParams("ui", -1);
+	_ui_data->SetSpeedMeterParams("ui", SPEED_DOWN);
 }
 
 void CUI::CollisionTypeRecovery()
 {
-	_ui_data->SetSpeedMeterParams("ui",  1);
+	_ui_data->SetSpeedMeterParams("ui",  SPEED_UP);
 }
 
 void CUI::CollisionTypeGameOver()
@@ -120,13 +97,34 @@ void CUI::CollisionTypeGameOver()
 
 void CUI::CollisionTypeItemBrock()
 {
-	SetGateParameter( 2);
+	SetGateParameter(2);
+}
+
+void CUI::CollisionTypeGateBreak()
+{
+	//!ƒQ[ƒg‚ð’´‚¦‚½‚çƒXƒRƒA‚ð‰ÁŽZ‚·‚é
+	switch (gate_count) {
+	case FIRST_GATE:
+		gate_score[FIRST_GATE] = game_timer * score_num;
+		break;
+	case SECOND_GATE:
+		gate_score[SECOND_GATE] = game_timer * score_num;
+		break;
+	case THIRD_GATE:
+		gate_score[THIRD_GATE] =  game_timer * score_num;
+		total = gate_score[FIRST_GATE] + gate_score[SECOND_GATE] + gate_score[THIRD_GATE];
+		clear_flag = true;
+		break;
+	}
+	
+	gate_count++;
+	SetGateParameter(SET_NEXT_TIME);
 }
 
 void CUI::SetGateParameter(int gate_numbers = 1)
 {
-	this->gagefcomveter += (MAX_TIMER * 0.1f) * gate_numbers;
-	this->game_timer    +=                      gate_numbers;
+	this->gagefcomveter += (MAX_TIMER * multiply_num) * gate_numbers;
+	this->game_timer    +=                              gate_numbers;
 	this->
 	_ui_data->SetGageParams("ui", gagefcomveter);
 }

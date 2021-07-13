@@ -2,7 +2,7 @@
 
 /**
  * @fn 　　背景モデルの初期位置
- * @brief　AddParametor関数で背景モデルの初期座標の設定
+ * @brief　AddModelParametor関数で背景モデルの初期座標の設定
  * @return なし
  */
 void C_MAP::Init()
@@ -22,11 +22,10 @@ void C_MAP:: Update()
 	for (int y = 0; y < model_position.size(); ++y) 
 	{
 		Vector3 position = *model_position[y].begin();
-		int remove_position = REMOVE_POS;
 
 		//!プレイヤーのZ座標より小さくなった場合、
 		//!配列の一番前の場所を削除し、配列の一番後ろに追加する。
-		if (position.z + remove_position <= player_position.z)
+		if (position.z + REMOVE_POS <= player_position.z)
 		{
 			model_position[y].erase(model_position[y].begin());
 			model_position[y].push_back(Vector3(position.x, position.y, (model_position[y].back().z + model_scene[y])));
@@ -70,10 +69,8 @@ void C_MAP::AddModelParametor(LPCTSTR _filename, int scene, Vector3 position)
 	model_scene.push_back(scene);                                   //!モデル同士の間隔の設定
 	model_position.resize(model.size());                            //!モデル情報の配列の確保
 	
-	int model_size = MODEL_SIZE;
-
 	//!モデルの初期座標を設定する
-	for (int i = 0; i < model_size; i++)
+	for (int i = 0; i < MODEL_SIZE; i++)
 	{
 		model_position[model.size() - 1].push_back(position + Vector3(0.0f,0.0f,-5 + (i * scene)));
 	}

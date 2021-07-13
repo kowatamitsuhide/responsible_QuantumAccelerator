@@ -63,9 +63,22 @@ private:
 　　* ゲート通過時のスコア加算用
 　　*/
 	enum Gates {FIRST_GATE,SECOND_GATE,THIRD_GATE};
+
+	/**
+　　* @enum Timer
+　　* タイマーのカウントダウン用
+　　*/
+	enum  Timer {COUNT_DOWN = -1, SET_NEXT_TIME = 20, FRAME = 60};
+
+	/**
+　　* @enum Speed
+　　* ブロックに当たった際のスピード増減用
+　　*/
+	enum Speed { SPEED_DOWN = -1, SPEED_UP = 1};
+
 	int gate_count;    //!通過したゲートの個数
 	int gate_score[3]; //!スコアの配列
+	const int score_num = 100; 
+	const float multiply_num = 0.1f;
 
-	const int score_num = 100;
-	const int gate_parametor = 20;
 };
